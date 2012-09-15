@@ -48,23 +48,43 @@ console.log("sessionCheckUri: " + sessionCheckUri)
 //sessionCheck=http.request(apiUri+"/rest/v1/system/session/check");
 //console.log(sessionCheck)
 
+
+  app.get('/', function(req, res) {
+    if (req.session.token != null) {
+      return res.render('index.jade', {
+        title: 'Team Work',
+        userName: req.session.userName
+      });
+    } else {
+      return res.redirect('/login');
+    }
+  });
+
+
 app.get('/login', function(req, res){
-	console.log("Entered /login Section" + loginUri);
 	return res.redirect(loginUri);
-	console.log("Exit /login Section    ")
 });
 
 
   app.get('/oauth', function(req, res) {
     var authCode, tokenUri;
     authCode = req.query['code'];
-    tokenUri = "" + apiUri + "/oauth/token?code=" + authCode + "&client_id=" + clientId + "&redirect_uri=" + appAuthUri + "&client_secret=" + clientSecret;
+    console.log("AuthCode: "+authCode)
+   tokenUri = "" + apiUri + "/oauth/token?code=" + authCode + "&client_id=" + clientId + "&redirect_uri=" + appAuthUri + "&client_secret=" + clientSecret;
+    console.log("TokenURL:" + tokenUri)
+    var temp;
+    temp=get(tokenUri);
+    console.log(temp);
     return request(tokenUri, function(error, response, body) {
-      var json;
+      console.log("inside return");
+       var json;
       if (error != null) {
         console.log("error: " + (util.inspect(error)));
         Error.throw500(req, res);
       }
+      console.log("made it this far");
+      console.log(body);
+      console.log("Req: " +req);
       json = JSON.parse(body);
       req.session.token = json.access_token;
       console.log("session.token=" + req.session.token);
@@ -85,10 +105,7 @@ app.get('/login', function(req, res){
     });
   });
 
-  });
-
-
-
+  console.log("Out of Function");
 
 
 // Routes
