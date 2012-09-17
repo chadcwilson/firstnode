@@ -18,15 +18,23 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+ app.use(express.favicon());
+      app.use(express.logger('dev'));
+      app.use(express.cookieParser());
+  app.use(express.session({
+        secret: "token"
+      }));
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
 
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
+
+//app.configure('development', function(){
+//  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+//});
+
+//app.configure('production', function(){
+//  app.use(express.errorHandler());
+//});
 
 
 // SLC Configurations
@@ -38,32 +46,33 @@ apiUri = "https://api.sandbox.slcedu.org/api";
 loginUri = "" + apiUri + "/oauth/authorize?Realm=SandboxIDP&response_type=code&client_id=" + clientId + "&redirect_uri=" + appAuthUri; 
 sessionCheckUri = "" + apiUri + "/rest/v1/system/session/check";
 
-
-console.log("Client ID: " + clientId)
-console.log("Client Secret: "  + clientSecret)
-console.log("Application URL: "+ appUri)
-console.log("AppAuthURL: "+appAuthUri)
-console.log("loginUri: " + loginUri)
-console.log("sessionCheckUri: " + sessionCheckUri)
-//sessionCheck=http.request(apiUri+"/rest/v1/system/session/check");
-//console.log(sessionCheck)
-
-
   app.get('/', function(req, res) {
-    if (req.session.token != null) {
-      return res.render('index.jade', {
-        title: 'Team Work',
-        userName: req.session.userName
-      });
-    } else {
+    //  console.log("Req session token: "+req.session.token);
+    //  if (req.session.token != null) {
+    //  return res.render('index.jade', {
+    //    title: 'Team Work',
+    //    userName: req.session.userName
+    //  });
+   // } else {
       return res.redirect('/login');
-    }
+   // }
   });
 
 
 app.get('/login', function(req, res){
 	return res.redirect(loginUri);
 });
+
+app.get('/token', function(req,res){
+        var testToken;
+        console.log("In token");
+        console.log("Req: "+ req);
+        console.log(body)
+	testToken=JSON.parse(body);
+        
+        
+});
+
 
 
   app.get('/oauth', function(req, res) {
@@ -72,10 +81,10 @@ app.get('/login', function(req, res){
     console.log("AuthCode: "+authCode)
    tokenUri = "" + apiUri + "/oauth/token?code=" + authCode + "&client_id=" + clientId + "&redirect_uri=" + appAuthUri + "&client_secret=" + clientSecret;
     console.log("TokenURL:" + tokenUri)
-    var temp;
-    temp=get(tokenUri);
-    console.log(temp);
-    return request(tokenUri, function(error, response, body) {
+    console.log("Response:" + res)
+    console.log("Req: " +req)    
+	//Fails here
+     return req(tokenUri, function(error, response, body) {
       console.log("inside return");
        var json;
       if (error != null) {
