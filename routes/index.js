@@ -7,8 +7,11 @@ var request = require('request');
 
 var apiUri = 'https://api.sandbox.slcedu.org';
 var oauthUri = 'http://localhost:1337/oauth';
-var clientId = 'qK9cRwTO3';
-var clientSecret = 'Lhk7dsvgKThfNoihfBTI8ulnl6Vyo59fUtReH4A8RXJBXI1mv';
+//var clientId = 'qK9cRwTO3';
+//var clientSecret = 'Lhk7dsvgKThfNoihfBTI8ulnl6Vyo59fUtReH4A8RXJBXI1mv';
+var clientId = 'qK9cRwTOFR';
+var clientSecret = 'Lhk7xvgKThfNoihfBTI8ulnl6Vyo59fUtReH4A8RXJBXI1mv';
+
 
 // ROUTE EXPORTS //
 
